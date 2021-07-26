@@ -22,11 +22,13 @@ class LazyKeyAffinity<K, V> implements KeyAffinity<K, V> {
         this.factory = lazy(factory, false);
     }
 
+    // 核心方法, 从一个key选出线程池
     @Nonnull
     public V select(K key) {
         return factory.get().select(key);
     }
 
+    // 当每一个key执行完之后回收处理这个key的线程池.
     public void finishCall(K key) {
         factory.get().finishCall(key);
     }

@@ -153,9 +153,11 @@ class KeyAffinityExecutorImpl<K> extends LazyKeyAffinity<K, ListeningExecutorSer
             finalTask = task;
         }
 
+        //1.选择相应的线程池
         ListeningExecutorService service = select(key);
         boolean addCallback = false;
         try {
+            //2.提交任务
             service.execute(() -> {
                 try {
                     finalTask.run();
@@ -163,6 +165,7 @@ class KeyAffinityExecutorImpl<K> extends LazyKeyAffinity<K, ListeningExecutorSer
                     throwIfUnchecked(e);
                     throw new UncheckedExecutionException(e);
                 } finally {
+                    //3.该任务执行完成后check对于该key对应的线程池要不要清空
                     finishCall(key);
                 }
             });

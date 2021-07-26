@@ -145,6 +145,7 @@ class KeyAffinityImpl<K, V> implements KeyAffinity<K, V> {
     }
 
     public void finishCall(K key) {
+        // 对于每一个key如果处理完了, 那么会清空.
         mapping.computeIfPresent(key, (k, v) -> {
             if (v.decrConcurrency()) {
                 return null;
